@@ -16,6 +16,7 @@ class RoboWriter(object):
     def __init__(self, folder_path):
         self.folder_path = folder_path
         self.output_folder = folder_path + "/output"
+        self.texts = None
 
         """ Create a folder for output files if it does not already exist
         """
@@ -39,9 +40,9 @@ class RoboWriter(object):
             self._add_computed_columns()
 
         """ comparison_tables will contain rows that can be used for comparison in texts.
-            Like neighbours and other municippalities in same county.  
+            Like neighbours and other municippalities in same county.
         """
-        self.comparison_tables = {} 
+        self.comparison_tables = {}
         if "compare_categories" in self.settings["data_source"]:
             for category in self.settings["data_source"]["compare_categories"]:
                 self._add_comparison_table(category)
@@ -52,12 +53,12 @@ class RoboWriter(object):
     def _get_data(self):
         if "csv" in self.settings["data_source"]:
             file_path = "%s/%s" % (self.folder_path, self.settings["data_source"]["csv"])
-            
+
             # The csv delimiter can be set as an config option
             delimiter = ","
             if "delimiter" in self.settings["data_source"]:
                 delimiter = self.settings["data_source"]["delimiter"]
-            
+
             # Auto-detect column types
             tester = TypeTester(locale='sv_SE',)
 
@@ -90,7 +91,7 @@ class RoboWriter(object):
         for row in self.data.rows:
             row_name = row[self.key]
             template_path = "%s/%s" % (self.folder_path, self.settings["template"])
-            
+
             context = {
                 "row": row
             }
@@ -118,6 +119,6 @@ class RoboWriter(object):
 
             with open(file_path, "w") as out_file:
                 out_file.write(content.encode("utf-8"))
-            
 
-        
+
+
